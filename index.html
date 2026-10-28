@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tajná mise: 17. listopad</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #38bdf8;
+      --accent2: #a78bfa;
+      --success: #4ade80;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --danger: #f87171;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      line-height: 1.5;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 680px;
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      border: 1px solid #334155;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(90deg, #1e3a8a, #4c1d95);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .progress-wrap {
+      flex: 1;
+      max-width: 200px;
+    }
+
+    .progress-label {
+      font-size: 0.75rem;
+      color: #c4b5fd;
+      margin-bottom: 4px;
+      text-align: right;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: #312e81;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #38bdf8, #a78bfa);
+      border-radius: 99px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* Content */
+    .content {
+      padding: 28px 24px 32px;
+      min-height: 420px;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      line-height: 1.25;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--accent);
+    }
+
+    p {
+      margin-bottom: 14px;
+      font-size: 1.05rem;
+    }
+
+    .story-box {
+      background: #0f172a;
+      border-left: 4px solid var(--accent);
+      padding: 16px 18px;
+      border-radius: 0 12px 12px 0;
+      margin: 18px 0;
+      font-size: 1.05rem;
+    }
+
+    .emoji-big {
+      font-size: 3.2rem;
+      text-align: center;
+      margin: 12px 0 20px;
+      line-height: 1;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      color: white;
+      border: none;
+      padding: 14px 26px;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.45);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: #334155;
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+      box-shadow: none;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    /* Choices */
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .choice {
+      background: #0f172a;
+      border: 2px solid #334155;
+      padding: 14px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .choice:hover {
+      border-color: var(--accent);
+      background: #1e293b;
+    }
+
+    .choice.correct {
+      border-color: var(--success);
+      background: rgba(74, 222, 128, 0.12);
+    }
+
+    .choice.wrong {
+      border-color: var(--danger);
+      background: rgba(248, 113, 113, 0.12);
+    }
+
+    .choice:disabled {
+      cursor: default;
+      opacity: 0.85;
+    }
+
+    /* Feedback */
+    .feedback {
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.good {
+      background: rgba(74, 222, 128, 0.15);
+      color: #4ade80;
+    }
+
+    .feedback.bad {
+      background: rgba(248, 113, 113, 0.15);
+      color: #f87171;
+    }
+
+    /* Collectibles */
+    .shards {
+      display: flex;
+      gap: 8px;
+      margin: 16px 0;
+      flex-wrap: wrap;
+    }
+
+    .shard {
+      width: 42px;
+      height: 42px;
+      background: #312e81;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      opacity: 0.35;
+      transition: all 0.3s;
+    }
+
+    .shard.got {
+      opacity: 1;
+      background: linear-gradient(135deg, #38bdf8, #a78bfa);
+      transform: scale(1.08);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+    }
+
+    /* Certificate */
+    .certificate {
+      background: linear-gradient(145deg, #1e1b4b, #312e81);
+      border: 3px solid #a78bfa;
+      border-radius: 16px;
+      padding: 28px 20px;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .certificate h3 {
+      font-size: 1.4rem;
+      color: #c4b5fd;
+      margin-bottom: 8px;
+    }
+
+    .certificate .name {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: white;
+      margin: 10px 0;
+    }
+
+    /* Footer note */
+    .footer-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid #334155;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .content { padding: 22px 16px 28px; }
+      h1 { font-size: 1.45rem; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">📔 Tajná mise</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span id="progress-text">0 / 6</span> střípků</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- SCREEN: START -->
+      <div class="screen active" id="screen-start">
+        <div class="emoji-big">📦✨</div>
+        <h1>Našel jsi starý deník</h1>
+        <p>V babiččině skříni jsi objevil zamčený deník. Na obalu je napsáno:</p>
+        <div class="story-box">
+          „17. listopad 1989 – ať to nikdo nečte… dokud nebude svoboda.“
+        </div>
+        <p>Uvnitř je schovaných <strong>6 střípků pravdy</strong>. Když je všechny najdeš, pochopíš, co se ten den stalo a proč je 17. listopad státní svátek.</p>
+        <div class="btn-group">
+          <button class="btn" onclick="goTo('intro')">Otevřít deník 🔓</button>
+        </div>
+      </div>
+
+      <!-- SCREEN: INTRO -->
+      <div class="screen" id="screen-intro">
+        <div class="emoji-big">🧒📖</div>
+        <h2>Ahoj, detektive!</h2>
+        <p>Jmenuješ se <strong id="player-name-display">Hrdina</strong> a právě začínáš tajnou misi.</p>
+        <p>Než otevřeme první stránku, řekni mi, jak se jmenuješ:</p>
+        <input type="text" id="name-input" placeholder="Napiš své jméno…" maxlength="20"
+               style="width:100%;padding:14px 16px;border-radius:12px;border:2px solid #334155;background:#0f172a;color:white;font-size:1.1rem;font-family:inherit;margin:12px 0 8px;">
+        <div class="btn-group">
+          <button class="btn" onclick="saveName()">Pokračovat →</button>
+        </div>
+      </div>
+
+      <!-- SCREEN: CHAPTER 1 -->
+      <div class="screen" id="screen-ch1">
+        <div class="emoji-big">🏫🕊️</div>
+        <h2>Kapitola 1: Proč studenti vyšli do ulic?</h2>
+        <div class="story-box">
+          Bylo 17. listopadu 1989. Studenti z vysokých škol se sešli v Praze. Oficiálně chtěli uctít památku studenta Jana Opletala, kterého zabili nacisté v roce 1939. Ale v srdci měli něco víc…
+        </div>
+        <p>Chtěli říct nahlas, že už nechtějí žít ve strachu a bez svobody.</p>
+        <p><strong>Otázka:</strong> Proč studenti ten den vyšli do ulic?</p>
+        <div class="choices" id="ch1-choices">
+          <button class="choice" onclick="answer(1, true, this)">Chtěli uctít památku studenta a zároveň říct, že chtějí svobodu</button>
+          <button class="choice" onclick="answer(1, false, this)">Chtěli jít na výlet a koupit si zmrzlinu</button>
+          <button class="choice" onclick="answer(1, false, this)">Chtěli se jen projít po Praze</button>
+        </div>
+        <div class="feedback" id="ch1-feedback"></div>
+        <div class="btn-group" id="ch1-next" style="display:none;">
+          <button class="btn" onclick="collectShard(1); goTo('ch2')">Další stránka →</button>
+        </div>
+      </div>
+
+      <!-- SCREEN: CHAPTER 2 -->
+      <div class="screen" id="screen-ch2">
+        <div class="emoji-big">🚶‍♂️🚶‍♀️🕯️</div>
+        <h2>Kapitola 2: Průvod Prahou</h2>
+        <div class="story-box">
+          Studenti šli s květinami a svíčkami. Zpívali a volali hesla o svobodě. Lidé z oken jim mávali. Bylo jich tisíce. Chtěli, aby je politici konečně slyšeli.
+        </div>
+        <p>Průvod směřoval na <strong>Národní třídu</strong>.</p>
+        <p><strong>Úkol:</strong> Co studenti nesli a volali?</p>
+        <div class="choices" id="ch2-choices">
+          <button class="choice" onclick="answer(2, true, this)">Květiny, svíčky a hesla o svobodě</button>
+          <button class="choice" onclick="answer(2, false, this)">Balónky a zmrzlinu</button>
+          <button class="choice" onclick="answer(2, false, this)">Fotbalové dresy</button>
+        </div>
+        <div class="feedback" id="ch2-feedback"></div>
+        <div class="btn-group" id="ch2-next" style="display:none;">
+          <button class="btn" onclick="collectShard(2); goTo('ch3')">Další stránka →</button>
+        </div>
+      </div>
+
+      <!-- SCREEN: CHAPTER 3 -->
+      <div class="screen" id="screen-ch3">
+        <div class="emoji-big">🚓⚠️</div>
+        <h2>Kapitola 3: Národní třída</h2>
+        <div class="story-box">
+          Na Národní třídě cesta skončila. Policisté v přilbách a se štíty zablokovali ulici. Studenti seděli na zemi, drželi se za ruce a zpívali. Chtěli ukázat, že jsou mírumilovní.
+        </div>
+        <p>Pak se stalo něco smutného: policisté začali studenty tlačit, bít obušky a rozhánět. Mnoho mladých lidí bylo zraněno. Zprávy o tom se rychle roznesly po celé zemi.</p>
+        <p><strong>Otázka:</strong> Jak se studenti snažili bránit?</p>
+        <div class="choices" id="ch3-choices">
+          <button class="choice" onclick="answer(3, false, this)">Utíkali a schovávali se</button>
+          <button class="choice" onclick="answer(3, true, this)">Seděli na zemi, drželi se za ruce a zpívali – chtěli být mírumilovní</button>
+          <button class="choice" onclick="answer(3, false, this)">Házeli kameny</button>
+        </div>
+        <div class="feedback" id="ch3-feedback"></div>
+        <div class="btn-group" id="ch3-next" style="display:none;">
+          <button class="btn" onclick="collectShard(3); goTo('ch4')">Další stránka →</button>
+        </div>
+      </div>
+
+      <!-- SCREEN: CHAPTER 4 -->
+      <div class="screen" id="screen-ch4">
+        <div class="emoji-big">📢🔔</div>
+        <h2>Kapitola 4: Co se stalo potom?</h2>
+        <div class="story-box">
+          Zprávy o bití studentů se šířily jako oheň. Lidé v továrnách, ve školách i doma říkali: „Už dost!“ Začaly další demonstrace. Herci, studenti i dělníci se spojili. Během pár týdnů se celá země postavila za svobodu.
+        </div>
+        <p>Této pokojné změně se říká <strong>Sametová revoluce</strong> – protože proběhla bez velkého násilí a „jako samet“.</p>
+        <p><strong>Otázka:</strong> Proč se revoluci říká „sametová“?</p>
+        <div class="choices" id="ch4-choices">
+          <button class="choice" onclick="answer(4, true, this)">Protože byla pokojná a bez velkého násilí</button>
+          <button class="choice" onclick="answer(4, false, this)">Protože všichni nosili sametové oblečení</button>
+          <button class="choice" onclick="answer(4, false, this)">Protože se stala v sametovém měsíci</button>
+        </div>
+        <div class="feedback" id="ch4-feedback"></div>
+        <div class="btn-group" id="ch4-next" style="display:none;">
+          <button class="btn" onclick="collectShard(4); goTo('ch5')">Další stránka →</button>
+        </div>
+      </div>
+
+      <!-- SCREEN: CHAPTER 5 - Communism -->
+      <div class="screen" id="screen-ch5">
+        <div class="emoji-big">🏛️🔒</div>
+        <h2>Kapitola 5: Co byl komunismus?</h2>
+        <div class="story-box">
+          Před rokem 1989 v Československu vládla Komunistická strana. Měla téměř veškerou moc.
+        </div>
+        <p>Lidé nemohli svobodně říkat, co si myslí. Knihy a noviny se kontrolovaly. Cestovat na Západ bylo velmi těžké. Volby nebyly opravdu svobodné – vyhrávala skoro vždy jen jedna strana.</p>
+        <p>Mnoho lidí se bálo mluvit nahlas, protože za kritiku mohli mít problémy.</p>
+        <p><strong>Otázka:</strong> Co bylo na komunismu pro lidi nejhorší?</p>
+        <div class="choices" id="ch5-choices">
+          <button class="choice" onclick="answer(5, true, this)">Nemohli svobodně říkat své názory a žít bez strachu</button>
+          <button class="choice" onclick="answer(5, false, this)">Museli nosit stejné oblečení</button>
+          <button class="choice" onclick="answer(5, false, this)">Neměli rádi čokoládu</button>
+        </div>
+        <div class="feedback" id="ch5-feedback"></div>
+        <div class="btn-group" id="ch5-next" style="display:none;">
+          <button class="btn" onclick="collectShard(5); goTo('ch6')">Další stránka →</button>
+        </div>
+      </div>
+
+      <!-- SCREEN: CHAPTER 6 - Holiday -->
+      <div class="screen" id="screen-ch6">
+        <div class="emoji-big">🇨🇿📅</div>
+        <h2>Kapitola 6: Proč je 17. listopad svátek?</h2>
+        <div class="story-box">
+          17. listopad je státní svátek České republiky. Oficiálně se jmenuje <strong>Den boje za svobodu a demokracii</strong> (a také Mezinárodní den studentstva).
+        </div>
+        <p>Připomínáme si, že svoboda a demokracie nejsou samozřejmost. Studenti a lidé v roce 1989 měli odvahu říct „ne“ strachu a „ano“ svobodě. Díky nim dnes můžeme říkat, co si myslíme, volit a cestovat.</p>
+        <p><strong>Poslední otázka:</strong> Proč slavíme 17. listopad?</p>
+        <div class="choices" id="ch6-choices">
+          <button class="choice" onclick="answer(6, true, this)">Abychom si připomněli odvahu lidí, kteří bojovali za svobodu a demokracii</button>
+          <button class="choice" onclick="answer(6, false, this)">Protože je to den, kdy začíná zima</button>
+          <button class="choice" onclick="answer(6, false, this)">Protože je to den, kdy se rozdávají dárky</button>
+        </div>
+        <div class="feedback" id="ch6-feedback"></div>
+        <div class="btn-group" id="ch6-next" style="display:none;">
+          <button class="btn" onclick="collectShard(6); goTo('end')">Dokončit misi →</button>
+        </div>
+      </div>
+
+      <!-- SCREEN: END -->
+      <div class="screen" id="screen-end">
+        <div class="emoji-big">🏆✨</div>
+        <h1>Mise splněna!</h1>
+        <p>Nasbíral jsi všech 6 střípků pravdy. Teď už víš, co se stalo 17. listopadu 1989.</p>
+
+        <div class="shards" id="final-shards">
+          <div class="shard got">1</div>
+          <div class="shard got">2</div>
+          <div class="shard got">3</div>
+          <div class="shard got">4</div>
+          <div class="shard got">5</div>
+          <div class="shard got">6</div>
+        </div>
+
+        <div class="certificate">
+          <h3>Certifikát hrdiny demokracie</h3>
+          <p>Tímto se potvrzuje, že</p>
+          <div class="name" id="cert-name">Hrdina</div>
+          <p>úspěšně prošel Tajnou misí 17. listopadu<br>a pochopil význam svobody a demokracie.</p>
+          <p style="margin-top:14px;font-size:0.95rem;color:#c4b5fd;">17. listopad – Den boje za svobodu a demokracii</p>
+        </div>
+
+        <div class="story-box" style="margin-top:20px;">
+          <strong>Co si zapamatovat:</strong><br>
+          • 17. 11. 1989 studenti demonstrovali za svobodu.<br>
+          • Na Národní třídě je policie násilně rozehnala.<br>
+          • To spustilo Sametovou revoluci – pokojný konec komunismu.<br>
+          • Komunismus znamenal, že jedna strana měla všechnu moc a lidé se báli říkat pravdu.<br>
+          • Proto dnes 17. listopad slavíme jako státní svátek.
+        </div>
+
+        <div class="btn-group">
+          <button class="btn" onclick="restart()">Hrát znovu 🔄</button>
+        </div>
+
+        <div class="footer-note">
+          Vytvořeno pro žáky 4. třídy • Jednoduchá verze historie pro děti
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let playerName = "Hrdina";
+    let shards = 0;
+    const totalShards = 6;
+
+    function updateProgress() {
+      const pct = (shards / totalShards) * 100;
+      document.getElementById("progress-fill").style.width = pct + "%";
+      document.getElementById("progress-text").textContent = shards + " / " + totalShards;
+    }
+
+    function goTo(screenId) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById("screen-" + screenId).classList.add("active");
+      window.scrollTo(0, 0);
+    }
+
+    function saveName() {
+      const input = document.getElementById("name-input");
+      const name = input.value.trim();
+      if (name.length > 0) {
+        playerName = name;
+      }
+      document.getElementById("player-name-display").textContent = playerName;
+      document.getElementById("cert-name").textContent = playerName;
+      goTo("ch1");
+    }
+
+    function answer(chapter, isCorrect, btn) {
+      const choices = document.getElementById("ch" + chapter + "-choices");
+      const feedback = document.getElementById("ch" + chapter + "-feedback");
+      const nextBtn = document.getElementById("ch" + chapter + "-next");
+
+      // Disable all choices
+      choices.querySelectorAll(".choice").forEach(c => {
+        c.disabled = true;
+      });
+
+      if (isCorrect) {
+        btn.classList.add("correct");
+        feedback.textContent = "✅ Správně! Výborně.";
+        feedback.className = "feedback show good";
+        nextBtn.style.display = "flex";
+      } else {
+        btn.classList.add("wrong");
+        feedback.textContent = "❌ Ještě ne. Zkus se zamyslet znovu – nebo klikni na správnou odpověď.";
+        feedback.className = "feedback show bad";
+
+        // Re-enable after short delay so they can try again
+        setTimeout(() => {
+          choices.querySelectorAll(".choice").forEach(c => {
+            c.disabled = false;
+            c.classList.remove("wrong");
+          });
+          feedback.classList.remove("show");
+        }, 1600);
+      }
+    }
+
+    function collectShard(num) {
+      if (shards < num) {
+        shards = num;
+        updateProgress();
+      }
+    }
+
+    function restart() {
+      shards = 0;
+      updateProgress();
+      // Reset all chapters
+      for (let i = 1; i <= 6; i++) {
+        const choices = document.getElementById("ch" + i + "-choices");
+        if (choices) {
+          choices.querySelectorAll(".choice").forEach(c => {
+            c.disabled = false;
+            c.classList.remove("correct", "wrong");
+          });
+        }
+        const feedback = document.getElementById("ch" + i + "-feedback");
+        if (feedback) {
+          feedback.className = "feedback";
+          feedback.textContent = "";
+        }
+        const next = document.getElementById("ch" + i + "-next");
+        if (next) next.style.display = "none";
+      }
+      document.getElementById("name-input").value = "";
+      goTo("start");
+    }
+
+    // Allow Enter key on name input
+    document.getElementById("name-input").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") saveName();
+    });
+  </script>
+</body>
+</html>
